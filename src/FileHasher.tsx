@@ -44,10 +44,10 @@ const PaperContainer = styled(Paper)(({ theme }) => ({
 
   flexShrink: 0,
 
-  height: `calc(${theme.sizes.modal.height.desktop} + 32px)`,
+  minHeight: `calc(${theme.sizes.modal.height.desktop} + 32px)`,
 
   [theme.breakpoints.down("sm")]: {
-    height: `calc(${theme.sizes.modal.height.mobile} + 32px)`,
+    minHeight: `calc(${theme.sizes.modal.height.mobile} + 32px)`,
   },
 }));
 

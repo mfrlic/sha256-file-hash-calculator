@@ -37,7 +37,11 @@ const ResultData = ({
   label: string;
 }) => {
   return (
-    <Typography>
+    <Typography
+      sx={{
+        wordBreak: "break-all",
+      }}
+    >
       {label}: <b>{value}</b>
     </Typography>
   );
