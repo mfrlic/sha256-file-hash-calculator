@@ -5,6 +5,7 @@ import { useCallback, useRef, useState } from "react";
 import MaxFileSizeContainer from "./MaxFileSizeContainer";
 import DragOverlay from "./DragOverlay";
 import { MAX_FILE_SIZE } from "../../constants";
+import formatFileSize from "../../utils/formatFileSize";
 
 function FileUpload({
   processFileAndCalculateHash,
@@ -93,7 +94,7 @@ function FileUpload({
             Upload file
           </Button>
           <MaxFileSizeContainer maxSizeExceeded={maxSizeExceeded}>
-            Maximum file size: 10 GB
+            {`Maximum file size: ${formatFileSize(MAX_FILE_SIZE)}`}
           </MaxFileSizeContainer>
         </DragAndDropContainer>
       </label>

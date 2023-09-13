@@ -6,6 +6,8 @@ import { ThemeProvider } from "@mui/material";
 import theme from "../../theme";
 
 import "@testing-library/jest-dom/vitest";
+import formatFileSize from "../../utils/formatFileSize";
+import { MAX_FILE_SIZE } from "../../constants";
 
 describe("FileUpload component", () => {
   const processFileAndCalculateHashMock = vi.fn();
@@ -30,7 +32,9 @@ describe("FileUpload component", () => {
     expect(dragText).toBeInTheDocument();
 
     // check if the maximum file size text exists
-    const maxFileSizeText = getByText("Maximum file size: 10 GB");
+    const maxFileSizeText = getByText(
+      `Maximum file size: ${formatFileSize(MAX_FILE_SIZE)}`
+    );
     expect(maxFileSizeText).toBeInTheDocument();
 
     // check if the input element is hidden
