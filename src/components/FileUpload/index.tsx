@@ -4,6 +4,7 @@ import type { DragEventHandler } from "react";
 import { useCallback, useRef, useState } from "react";
 import MaxFileSizeContainer from "./MaxFileSizeContainer";
 import DragOverlay from "./DragOverlay";
+import { MAX_FILE_SIZE } from "../../constants";
 
 function FileUpload({
   processFileAndCalculateHash,
@@ -13,6 +14,7 @@ function FileUpload({
   const fileUploadRef = useRef<HTMLInputElement>(null);
 
   const [dragActive, setDragActive] = useState(false);
+  const [maxSizeExceeded, setMaxSizeExceeded] = useState<boolean>(false);
 
   const onDrag: DragEventHandler<
     HTMLFormElement | HTMLInputElement | HTMLDivElement
@@ -26,15 +28,26 @@ function FileUpload({
     }
   };
 
+  const checkFileSize = useCallback((file: File) => {
+    if (file.size > MAX_FILE_SIZE) {
+      setMaxSizeExceeded(true);
+      return false;
+    }
+
+    setMaxSizeExceeded(false);
+
+    return true;
+  }, []);
+
   const onFileUpload = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const file = event.target.files?.[0];
 
-      if (file) {
+      if (file && checkFileSize(file)) {
         processFileAndCalculateHash(file);
       }
     },
-    [processFileAndCalculateHash]
+    [processFileAndCalculateHash, checkFileSize]
   );
 
   const onDrop = useCallback(
@@ -44,13 +57,13 @@ function FileUpload({
       >
     ) => {
       event.preventDefault();
-      const files = event.dataTransfer.files;
+      const file = event.dataTransfer.files?.[0];
 
-      if (files && files[0]) {
-        processFileAndCalculateHash(files[0]);
+      if (file && checkFileSize(file)) {
+        processFileAndCalculateHash(file);
       }
     },
-    [processFileAndCalculateHash]
+    [processFileAndCalculateHash, checkFileSize]
   );
 
   const onButtonClick = () => {
@@ -79,7 +92,9 @@ function FileUpload({
           >
             Upload file
           </Button>
-          <MaxFileSizeContainer>Maximum file size: 10 GB</MaxFileSizeContainer>
+          <MaxFileSizeContainer maxSizeExceeded={maxSizeExceeded}>
+            Maximum file size: 10 GB
+          </MaxFileSizeContainer>
         </DragAndDropContainer>
       </label>
       {dragActive && (
